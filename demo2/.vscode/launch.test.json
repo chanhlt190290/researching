@@ -1,0 +1,28 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "memcached",
+                "projectName": "memcached",
+                "workingDirectory": "c:\\Users\\trungchanh\\Projects\\Researching\\memcached",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "memcached",
+                "projectName": "memcached",
+                "workingDirectory": "c:\\Users\\trungchanh\\Projects\\Researching\\memcached",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

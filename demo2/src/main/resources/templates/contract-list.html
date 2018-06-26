@@ -1,0 +1,8 @@
+<tr th:each="contract,iter : ${contracts}">
+    <td th:text="${contract.id}"></td>
+    <td>
+        <a target="_blank" th:attr="href='/contract/'+${contract.id}+'/person-in-charge'" th:text="${contract.name}"
+        />
+    </td>
+
+</tr>

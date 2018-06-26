@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: workflow-engine
+  labels:
+    app: workflow-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workflow-engine
+  template:
+    metadata:
+      labels:
+        app: workflow-engine
+    spec:
+      containers:
+        - image: gcr.io/bamboo-strata-204607/workflow-engine:1.0
+          name: workflow-engine
+          env:
+            - name: MYSQL_DB_HOST
+              value: 127.0.0.1:3306
+            - name: MYSQL_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: MYSQL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+          ports:
+            - containerPort: 80
+              name: workflow-engine

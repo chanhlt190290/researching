@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <title>Top 100</title>
+    <!-- <meta http-equiv="Refresh" content="1"> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('td.score').dblclick(function () {
+                var $that = $(this);
+                var score = $(this).text();
+                var employeeId = $(this).data('employee-id');
+                var scoreTxt = $('<input id="score-txt" />');
+                scoreTxt.val(score);
+                scoreTxt.keyup(function (e) {
+                    if (e.keyCode == 13) { //user press ENTER
+                        var newScore = $(this).val();
+                        if (newScore !== score) {
+                            updateScore(employeeId, newScore);
+                        } else {
+                            $that.html(score);
+                        }
+                    } else if (e.keyCode == 27) { //user press ESCAPE
+                        $that.html(score);
+                    }
+                });
+                scoreTxt.blur(function (e) {
+                    $that.html(score);
+                });
+                $(this).html(scoreTxt);
+                scoreTxt.focus();
+            });
+        });
+
+        function updateScore(employeeId, newScore) {
+            $.ajax({
+                url: "/edit/" + employeeId,
+                method: 'POST',
+                data: {
+                    score: parseFloat(newScore)
+                },
+                success: function (result) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+    <style>
+        td {
+            padding: 10px;
+        }
+
+        tr {
+            line-height: 40px;
+        }
+
+        td.score {
+            width: 70px;
+        }
+
+        input {
+            width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="1">
+        <tr th:each="employee,iter : ${employees}">
+            <td th:text="${iter.index+1}"></td>
+            <td th:text="${employee.name}"></td>
+            <td class="score" th:attr="data-employee-id=${employee.id}" th:text="${employee.score}"></td>
+        </tr>
+    </table>
+</body>
+
+</html>

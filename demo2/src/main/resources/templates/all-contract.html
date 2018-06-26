@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <title>All Contracts</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" rel="stylesheet" />
+    <!-- <meta http-equiv="Refresh" content="1"> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+        var socket = new WebSocket('ws://' + window.location.host + '/my-websocket-endpoint');
+        // Add an event listener for when a connection is open
+        socket.onopen = function () {
+            // console.log('WebSocket connection opened. Ready to send messages.');
+            // Send a message to the server
+            // socket.send('Hello, from WebSocket client!');
+        };
+        // Add an event listener for when a message is received from the server
+        socket.onmessage = function (message) {
+            console.log(message);
+            toastr.info(message.data);
+            alert(message.data);
+            refreshContractList();
+        };
+    </script>
+
+    <script>
+       
+
+        function refreshContractList() {
+            $.ajax({
+                url: "/contract-list",
+                success: function (result) {
+                    $("table").html(result);
+                }
+            });
+        }
+    </script>
+
+
+    <style>
+        td {
+            padding: 10px;
+        }
+
+        tr {
+            line-height: 40px;
+        }
+
+        td.score {
+            width: 70px;
+        }
+
+        input {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="1">
+
+
+    </table>
+    <script>
+    refreshContractList();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <title>Add contract</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+
+            $.ajax({
+                url: "/contract/types", success: function (result) {
+                    $("#contract-type").html("");
+                    result.forEach(function (type) {
+
+                        $("#contract-type").append("<option value=" + type.id + ">" + type.name + "</option>");
+                    });
+
+
+                }
+            });
+
+
+        });
+
+    </script>
+</head>
+
+<body>
+
+    <form action="/add" method="POST">
+
+
+        <p>
+            <input type="text" name="name"  />
+        </p>
+
+        <p>
+            <select id="contract-type" name="type">
+
+            </select>
+        </p>
+
+
+        <button type="submit">Submit</button>
+
+    </form>
+</body>
+
+</html>
