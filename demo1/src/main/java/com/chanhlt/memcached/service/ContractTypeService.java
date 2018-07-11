@@ -12,6 +12,7 @@ import net.spy.memcached.MemcachedClient;
 
 @Service
 public class ContractTypeService {
+
     @Autowired
     MemcachedClient memcachedClient;
 
@@ -21,7 +22,7 @@ public class ContractTypeService {
     @SuppressWarnings("unchecked")
     public List<ContractType> getAllContractTypes() {
 
-        List<ContractType> types = null;
+        List<ContractType> types;
 
         try {
             Object object = memcachedClient.get("contract-type");

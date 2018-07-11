@@ -2,3 +2,5 @@
 */.vscode/
 */.mvn/
 *.json
+/Stripe/payment-server/target/
+/Redis-pub-sub/publisher/target/

@@ -19,29 +19,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ContractController {
 
     @Autowired
-    ContractTypeService contractTypeService;
-
-    @Autowired
-    ContractRepo contractRepo;
-
-    @Autowired
     Publisher publisher;
-
-    @GetMapping("/add")
-    public String addForm() {
-        return "add";
-    }
 
     @PostMapping("/add")
     @ResponseBody
     public ResponseEntity<?> addContract(@RequestParam("name") String name, @RequestParam("type") int type) {
-
         Contract contract = new Contract();
         contract.setName(name);
         contract.setType(type);
         Contract data = contractRepo.save(contract);
         publisher.publish("There is a new contract has been added!");
-        return new ResponseEntity<Contract>(data, HttpStatus.OK);
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+    @Autowired
+    ContractTypeService contractTypeService;
+
+    @Autowired
+    ContractRepo contractRepo;
+
+    @GetMapping("/add")
+    public String addForm() {
+        return "add";
     }
 
     @GetMapping("/contract/types")

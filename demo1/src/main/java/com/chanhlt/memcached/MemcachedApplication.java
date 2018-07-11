@@ -26,77 +26,71 @@ import redis.clients.jedis.JedisPoolConfig;
 @SpringBootApplication
 public class MemcachedApplication {
 
-	@Autowired
-	EmployeeRepo employeeRepo;
+    @Autowired
+    EmployeeRepo employeeRepo;
 
-	
+    public static void main(String[] args) {
+        SpringApplication.run(MemcachedApplication.class, args);
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(MemcachedApplication.class, args);
-	}
+    @Bean
+    public CommandLineRunner commandLineRunner(org.springframework.context.ApplicationContext ctx) {
+        return args -> {
+            // String[] beanNames = ctx.getBeanDefinitionNames();
+            // Arrays.sort(beanNames);
+            // for (String beanName : beanNames) {
+            // 	System.out.println(beanName);
+            // }
 
-	@Bean
-	public CommandLineRunner commandLineRunner(org.springframework.context.ApplicationContext ctx) {
-		return args -> {
-			// String[] beanNames = ctx.getBeanDefinitionNames();
-			// Arrays.sort(beanNames);
-			// for (String beanName : beanNames) {
-			// 	System.out.println(beanName);
-			// }
+            // Jedis redis = getRedisClient();
+            // for (int i = 1; i <= 100000; i++) {
+            // 	Employee employee = new Employee();
+            // 	employee.setName("Employee " + (5000 + i));
+            // 	employee.setScore(System.currentTimeMillis() % 100);
+            // 	employeeRepo.save(employee);
+            // 	redis.zadd("top-100", employee.getScore(), String.valueOf(employee.getId()));
+            // 	redis.zremrangeByRank("top-100", 0, -101);
+            // }
+            // List<Employee> employees = employeeRepo.findAll();
+            // for(Employee employee : employees){
+            // 	System.out.println(employee.getName());
+            // 	redis.zadd("top-100", employee.getScore(), String.valueOf(employee.getId()));
+            // 	// redis.zremrangeByRank("top-100", 0, -101);
+            // }
+        };
+    }
 
-			// Jedis redis = getRedisClient();
+    @Bean
+    MemcachedClient getMemcachedClient() {
+        MemcachedClient memcacheClient = null;
+        try {
+            String address = "127.0.0.1:11211";
+            memcacheClient = new MemcachedClient(
+                    new ConnectionFactoryBuilder().setDaemon(true).setFailureMode(FailureMode.Retry).build(),
+                    AddrUtil.getAddresses(address));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return memcacheClient;
+    }
 
-			// for (int i = 1; i <= 100000; i++) {
-			// 	Employee employee = new Employee();
-			// 	employee.setName("Employee " + (5000 + i));
-			// 	employee.setScore(System.currentTimeMillis() % 100);
-			// 	employeeRepo.save(employee);
-			// 	redis.zadd("top-100", employee.getScore(), String.valueOf(employee.getId()));
-			// 	redis.zremrangeByRank("top-100", 0, -101);
-			// }
+    @Bean
+    Jedis getRedisClient() {
+        Jedis jedis = getJedisPool().getResource();
+        return jedis;
+    }
 
-			// List<Employee> employees = employeeRepo.findAll();
-			// for(Employee employee : employees){
-			// 	System.out.println(employee.getName());
-			// 	redis.zadd("top-100", employee.getScore(), String.valueOf(employee.getId()));
-			// 	// redis.zremrangeByRank("top-100", 0, -101);
-			// }
+    @Bean
+    JedisPool getJedisPool() {
+        final JedisPoolConfig poolConfig = new JedisPoolConfig();
+        final JedisPool jedisPool = new JedisPool(poolConfig, "localhost", 6379, 0);
+        return jedisPool;
+    }
 
-
-		};
-	}
-
-	@Bean
-	MemcachedClient getMemcachedClient() {
-		MemcachedClient memcacheClient = null;
-		try {
-			String address = "127.0.0.1:11211";
-			memcacheClient = new MemcachedClient(
-					new ConnectionFactoryBuilder().setDaemon(true).setFailureMode(FailureMode.Retry).build(),
-					AddrUtil.getAddresses(address));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return memcacheClient;
-	}
-
-	@Bean
-	Jedis getRedisClient() {
-		Jedis jedis = getJedisPool().getResource();
-		return jedis;
-	}
-
-	@Bean
-	JedisPool getJedisPool() {
-		final JedisPoolConfig poolConfig = new JedisPoolConfig();
-		final JedisPool jedisPool = new JedisPool(poolConfig, "localhost", 6379, 0);
-		return jedisPool;
-	}
-
-	@Bean
-	Publisher getPublisher() {
-		return new Publisher(getRedisClient(), Constants.CHANNEL_NAME);
-	}
+    @Bean
+    Publisher getPublisher() {
+        return new Publisher(getRedisClient(), Constants.CHANNEL_NAME);
+    }
 
 }

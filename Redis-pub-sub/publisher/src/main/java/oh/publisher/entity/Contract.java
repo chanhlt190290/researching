@@ -15,7 +15,7 @@ public class Contract implements Serializable {
 
     private static final long serialVersionUID = -2179934342484313105L;
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 

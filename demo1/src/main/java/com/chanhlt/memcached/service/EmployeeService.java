@@ -46,12 +46,11 @@ public class EmployeeService {
 
         // List<Employee> employees = em.createQuery("select e from Employee as e order by e.score desc, e.id ", Employee.class)
         // .setMaxResults(100).setFirstResult(0).getResultList();
-
         return employees;
 
     }
 
-    public Employee updateScore(int employeeId, double score){
+    public Employee updateScore(int employeeId, double score) {
         Employee employee = em.find(Employee.class, employeeId);
         employee.setScore(score);
         em.flush();
